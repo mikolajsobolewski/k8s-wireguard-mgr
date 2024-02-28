@@ -1,0 +1,56 @@
+name: CI
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '22 4 * * *'
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s:
+          - v1.29.0
+          - v1.28.0
+          - v1.27.0
+          - v1.26.0
+          - v1.25.3
+          - v1.24.7
+          - v1.23.13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 
+        with:
+          fetch-depth: 0
+      - name: Create kind ${{ matrix.k8s }} cluster
+        uses: helm/kind-action@4be822c96b3a80076fb61a4e54a4e89d8d79c9c6 
+        with:
+          node_image: kindest/node:${{ matrix.k8s }}
+          version: v0.20.0
+      - name: Install Skaffold
+        run: |
+          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+          sudo install skaffold /usr/local/bin/
+      - name: Test
+        run: make test
+  build-image:
+    name: Image
+    permissions:
+      packages: write
+      security-events: write
+      id-token: write
+      contents: read
+    needs:
+      - test
+    uses: curium-rocks/flows/.github/workflows/oci-build-image.yml@main
+    with:
+      codeql_enabled: true
+      image_name: k8s-wireguard-mgr
+      registry: 'ghcr.io/bryopsida'
+      push_in_pr: true

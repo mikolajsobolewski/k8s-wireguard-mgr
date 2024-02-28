@@ -1,0 +1,14 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: k3s-wireguard-mgr
+build:
+  artifacts:
+    - image: ghcr.io/bryopsida/k8s-wireguard-mgr
+      docker:
+        dockerfile: Dockerfile
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - tests/k8s/job.yaml
