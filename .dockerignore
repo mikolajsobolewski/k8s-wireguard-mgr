@@ -1,0 +1,8 @@
+*
+!kubernetes
+!wireguard
+!*.go
+!kubernetes/*.go
+!wireguard/*.go
+!go.mod
+!go.sum
