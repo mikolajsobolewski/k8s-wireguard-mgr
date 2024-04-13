@@ -1,6 +1,13 @@
 module github.com/bryopsida/k8s-wireguard-mgr
 
-go 1.22.0
+go 1.22.2
+
+require (
+	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20230429144221-925a1e7659e6
+	k8s.io/api v0.29.2
+	k8s.io/apimachinery v0.29.2
+	k8s.io/client-go v0.29.2
+)
 
 require (
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20230429144221-925a1e7659e6
