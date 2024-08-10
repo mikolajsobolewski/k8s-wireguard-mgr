@@ -12,3 +12,25 @@ build:
 manifests:
   rawYaml:
     - tests/k8s/job.yaml
+verify:
+  - name: verify-secret-created
+    container:
+      name: verify-secret-created
+      image: ghcr.io/curium-rocks/wg-kubectl:main
+      command:
+        - kubectl
+        - get
+        - secret
+        - test-wg-secret
+    executionMode:
+      kubernetesCluster:
+        jobManifestPath: tests/k8s/verify-secret-created.yaml
+  - name: verify-secret-works
+    container:
+      name: verify-secret-works
+      image: ghcr.io/curium-rocks/wg-kubectl:main
+      command: ["/bin/sh"]
+      args: ["-c", "cat /wg/privatekey | tee | wg pubkey"]
+    executionMode:
+      kubernetesCluster:
+        jobManifestPath: tests/k8s/verify-secret-works-with-wg.yaml
