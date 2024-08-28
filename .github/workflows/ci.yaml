@@ -60,5 +60,5 @@ jobs:
     with:
       codeql_enabled: true
       image_name: k8s-wireguard-mgr
-      registry: 'ghcr.io/bryopsida'
+      registry: 'ghcr.io/mikolajsobolewski'
       push_in_pr: true
